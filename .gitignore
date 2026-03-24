@@ -1,0 +1,22 @@
+# macOS
+.DS_Store
+
+# build artifacts
+myprogram
+*.o
+*.out
+
+# test files
+A
+B
+C
+D
+*.gz
+result.txt
+
+# editor / IDE
+.vscode/
+.idea/
+
+# logs
+*.log
