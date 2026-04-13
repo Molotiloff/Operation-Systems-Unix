@@ -120,10 +120,7 @@ int main(int argc, char *argv[])
     output_fd = open(output_name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
     if (output_fd < 0)
     {
-        if (input_name != NULL)
-        {
-            close(input_fd);
-        }
+        close(input_fd);
         die("open output");
     }
 
@@ -131,10 +128,7 @@ int main(int argc, char *argv[])
     unsigned char *buf = malloc(block_size);
     if (buf == NULL)
     {
-        if (input_name != NULL)
-        {
-            close(input_fd);
-        }
+        close(input_fd);
         close(output_fd);
         die("malloc");
     }
@@ -148,10 +142,7 @@ int main(int argc, char *argv[])
         if (rd < 0)
         {
             free(buf);
-            if (input_name != NULL)
-            {
-                close(input_fd);
-            }
+            close(input_fd);
             close(output_fd);
             die("read");
         }
@@ -174,10 +165,7 @@ int main(int argc, char *argv[])
             if (lseek(output_fd, pending_hole, SEEK_CUR) == (off_t)-1)
             {
                 free(buf);
-                if (input_name != NULL)
-                {
-                    close(input_fd);
-                }
+                close(input_fd);
                 close(output_fd);
                 die("lseek");
             }
@@ -190,23 +178,17 @@ int main(int argc, char *argv[])
     if (ftruncate(output_fd, total_size) < 0)
     {
         free(buf);
-        if (input_name != NULL)
-        {
-            close(input_fd);
-        }
+        close(input_fd);
         close(output_fd);
         die("ftruncate");
     }
 
     free(buf);
 
-    if (input_name != NULL)
+    if (close(input_fd) < 0)
     {
-        if (close(input_fd) < 0)
-        {
-            close(output_fd);
-            die("close input");
-        }
+        close(output_fd);
+        die("close input");
     }
 
     if (close(output_fd) < 0)
